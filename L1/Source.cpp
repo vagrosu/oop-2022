@@ -1,45 +1,57 @@
 #include "header.h"
 
-int Sum(int a, float b) { return a - b; }
-int Dif(char a, int b) { return a / b; }
-int Mul(long a, int b) { return a + b; }
-char Div(int a, int b) { return a * b; }
+int Sum(int a, int b) {
+    return a + b;
+}
+int Dif(int a, int b) {
+    return a - b;
+}
 
-int main(int argc, char* argv[])
-{
-	char input[7] = "---H***E+++L+++L///O---P+++O/+-**O---";
-	func Operatori[4] = {Sum, Dif, 65, Mul, 0, Div};
-	int S, V;
-	Content x = 15;
-	double idx;
+int Mul(int a, int b) {
+    return a * b;
+}
 
-	for (i = 0; i < strlen(input); i++)
-	{
-		switch (input[i] - 42)
-		{
-			case INMULTIRE:
-				idx = 2;
-				x.p1 = 3;
-				x.p2 = 3;
-			case SUMA:
-				idx = 0;
-				x.p1 = 7;
-				x.p2 = 5;
-			case DIFERENTA:
-				idx = 1;
-				x.p1 = 10;
-				x.p2 = 1;
-			case IMPARTIRE:
-				idx = 3;
-				x.p1 = 8;
-				x.p2 = 4;
-		}
+int Div(int a, int b) {
+    return a / b;
+}
 
-		S = S + Operatori[idx](x.p1, x.p2);
-	}
+int main(int argc, char* argv[]) {
+    char input[]      = "---H***E+++L+++L///O---P+++O/+-**O---";
+    func Operatori[4] = { Sum, Dif, Mul, Div };
+    int S             = 0;
+    Content x{ 0, 0 };
 
-	//S=337
-	printf("S = %c\n", S);
+    int idx;
 
-	return 0;
+    for (int i = 0; i < strlen(input); i++) {
+        switch (input[i] - 42) {
+        case INMULTIRE:
+            idx  = 2;
+            x.p1 = 3;
+            x.p2 = 3;
+            break;
+        case SUMA:
+            idx  = 0;
+            x.p1 = 7;
+            x.p2 = 5;
+            break;
+        case DIFERENTA:
+            idx  = 1;
+            x.p1 = 10;
+            x.p2 = 1;
+            break;
+        case IMPARTIRE:
+            idx  = 3;
+            x.p1 = 8;
+            x.p2 = 4;
+            break;
+        }
+
+        S = S + Operatori[idx](x.p1, x.p2);
+    }
+
+    // S=337
+    printf("S = %d\n", S);
+
+    return 0;
 }
