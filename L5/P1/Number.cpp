@@ -9,6 +9,7 @@ unsigned charToInt(char value) {
     } else if(value >= 'A' && value <= 'F'){
         return value-55;
     }
+    return 0;
 }
 
 char intToChar(int value) {
@@ -60,11 +61,11 @@ int Number::GetDigitsCount() {
     return strlen(this->value);
 }
 
-int Number::GetBase() {
+int Number::GetBase() const {
     return this->base;
 }
 
-char *Number::GetValue() {
+char *Number::GetValue() const{
     return this->value;
 }
 
@@ -72,39 +73,79 @@ char Number::operator[](unsigned int index) {
     return this->value[index];
 }
 
-Number operator+(Number &l,  Number &r) {
+Number Number::operator=(int value) {
+    unsigned finalBase = this->base;
+    std::string stringValue = std::to_string(value);
+    char const *charValue = stringValue.c_str();
+
+    Number finalNumber(charValue, 10);
+    finalNumber.SwitchBase(finalBase);
+    strcpy(this->value, finalNumber.GetValue());
+    return finalNumber;
+}
+
+Number Number::operator=(const char *value) {
+    strcpy(this->value, value);
+    this->base = 10;
+    return Number(value, 10);
+}
+
+Number operator+(const Number &l, const Number &r) {
     unsigned maxBase = l.GetBase() > r.GetBase() ? l.GetBase() : r.GetBase();
     Number lCopy(l.GetValue(), l.GetBase());
     Number rCopy(r.GetValue(), r.GetBase());
-    lCopy.SwitchBase(maxBase);
-    rCopy.SwitchBase(maxBase);
-    char *lVal = new char[lCopy.GetDigitsCount()];
-    char *rVal = new char[rCopy.GetDigitsCount()];
-    char *sum = new char[lCopy.GetDigitsCount() + rCopy.GetDigitsCount()];
-    char s = new char[];
-    sum = "";
-    int diff;
-    diff = abs(lCopy.GetDigitsCount() - lCopy.GetDigitsCount());
+    lCopy.SwitchBase(10);
+    rCopy.SwitchBase(10);
 
-    for (int i = 1; i <= diff; i++)
-        s += "0";
+    int intSum = atoi(lCopy.GetValue()) + atoi(rCopy.GetValue());
+    std::string stringSum = std::to_string(intSum);
+    char const *charSum = stringSum.c_str();
 
-    if (lCopy.GetDigitsCount() < rCopy.GetDigitsCount()) {
-        lVal = s + lVal;
-    } else {
-        rVal = s + rVal;
-    }
-    int curr, carry = 0;
-
-    for (int i = std::max(lCopy.GetDigitsCount(), rCopy.GetDigitsCount()) - 1; i > -1; i--) {
-        curr = carry + (lVal[i] - '0') + (rVal[i] - '0');
-        carry = curr / maxBase;
-        curr = curr % maxBase;
-        sum = (char)(curr + '0') + sum;
-    }
-
-    if (carry > 0)
-        sum = (char)(carry + '0') + sum;
-    return Number(sum, maxBase);
+    Number sumResult(charSum, 10);
+    sumResult.SwitchBase(maxBase);
+    std::cout << "Suma celor 2 numere in baza " << sumResult.GetBase() << " este: " << ' ' << sumResult.GetValue() << '\n';
+    return sumResult;
 }
+
+Number operator-(const Number &l, const Number &r) {
+    unsigned maxBase = l.GetBase() > r.GetBase() ? l.GetBase() : r.GetBase();
+    Number lCopy(l.GetValue(), l.GetBase());
+    Number rCopy(r.GetValue(), r.GetBase());
+    lCopy.SwitchBase(10);
+    rCopy.SwitchBase(10);
+
+    int intDif = atoi(lCopy.GetValue()) - atoi(rCopy.GetValue());
+    std::string stringDif = std::to_string(intDif);
+    char const *charDif = stringDif.c_str();
+
+    Number difResult(charDif, 10);
+    difResult.SwitchBase(maxBase);
+    std::cout << "Diferenta celor 2 numere in baza " << difResult.GetBase() << " este: " << ' ' << difResult.GetValue() << '\n';
+    return difResult;
+}
+
+bool operator>(const Number &l, const Number &r) {
+    Number lCopy(l.GetValue(), l.GetBase());
+    Number rCopy(r.GetValue(), r.GetBase());
+    lCopy.SwitchBase(10);
+    rCopy.SwitchBase(10);
+
+    if(lCopy.GetValue() > rCopy.GetValue()) {
+        return true;
+    }
+    return false;
+}
+
+bool operator<(const Number &l, const Number &r) {
+    Number lCopy(l.GetValue(), l.GetBase());
+    Number rCopy(r.GetValue(), r.GetBase());
+    lCopy.SwitchBase(10);
+    rCopy.SwitchBase(10);
+
+    if(lCopy.GetValue() < rCopy.GetValue()) {
+        return true;
+    }
+    return false;
+}
+
 
