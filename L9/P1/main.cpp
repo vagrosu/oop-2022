@@ -78,6 +78,53 @@ public:
         Iterator<K, V> afterLast(v+size, size);
         return afterLast;
     }
+    int Count() {
+        return size;
+    }
+    void Clear() {
+        size = 0;
+    }
+    bool Delete(const K& key) {
+        for(int i = 0; i < size; i++) {
+            if(v[i].key == key) {
+                for(int j = i; j < size-1; j++) {
+                  v[j] = v[j+1];
+                }
+                size--;
+                return true;
+            }
+        }
+        return false;
+    }
+    bool Exists(const K key) const {
+        for(int i = 0; i < size; i++) {
+            if(v[i].key == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+    bool Includes(const Map<K,V>& map) {
+//        for(int i = 0; i < size; i++) {
+//            if(!map.Exists(v[i].key)) {
+//                return false;
+//            }
+//        }
+//        return true;
+        for(int i = 0; i < map.size; i++) {
+            bool isFound = false;
+            for(int j = 0; j < size; j++) {
+                if(v[j].key == map.v[i].key) {
+                    isFound = true;
+                    break;
+                }
+            }
+            if(!isFound) {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 int main()
@@ -94,11 +141,20 @@ int main()
     m.Set(10, "C--");
     m.Get(10, s);
     printf("%s\n", s);
+    m.Delete(20);
     for (auto[key, value, index] : m)
     {
         printf("Index:%d, Key=%d, Value=%s\n", index, key, value);
     }
+    m.Clear();
+    printf("There are %d items in m\n", m.Count());
+    m[10] = "C++";
 
+    Map<int, const char *> b;
+    b[10] = "C++";
+    b[20] = "test";
+    b[30] = "Poo";
+    printf("%d", b.Includes(m));
     return 0;
 
 }
